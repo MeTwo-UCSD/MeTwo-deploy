@@ -17,7 +17,9 @@ branches:
 # download time and bandwidth
 cache:
     directories:
+        - $TRAVIS_BUILD_DIR/ct_build
         - $HOME/src
+
 
 # Installing needed dependencies
 addons:
@@ -37,10 +39,10 @@ before_script:
     - mkdir crosstool-ng 
     - tar -xf crosstool-ng-*.tar* -C crosstool-ng --strip-components=1 
     - cd crosstool-ng
-    - ./configure --prefix=/usr/local
+    - ./configure --prefix=$TRAVIS_BUILD_DIR/ct_build
     - make && sudo make install
 
-    - export PATH=$PATH:/usr/local/bin
+    - export PATH=$PATH:$TRAVIS_BUILD_DIR/ct_build/bin
 
 env:
     - TOOLCHAIN=aarch64-unknown-linux-gnueabi
