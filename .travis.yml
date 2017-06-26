@@ -38,8 +38,7 @@ before_script:
     - tar -xf crosstool-ng-*.tar* -C crosstool-ng --strip-components=1 
     - cd crosstool-ng
     - ./configure --prefix=/usr/local
-    - make
-    - make install
+    - make && sudo make install
 
     - export PATH=$PATH:/usr/local/bin
 
