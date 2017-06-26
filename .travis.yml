@@ -31,21 +31,23 @@ addons:
             - help2man
             - g++
 
-install:
+before_script:
     # install crosstool-NG
     - wget http://crosstool-ng.org/download/crosstool-ng/crosstool-ng-1.23.0.tar.xz
     - mkdir crosstool-ng 
     - tar -xf crosstool-ng-*.tar* -C crosstool-ng --strip-components=1 
     - cd crosstool-ng
-    - ./configure --enable-local
+    - ./configure --prefix=/usr/local
     - make
+    - make install
+
+    - export PATH=$PATH:/usr/local/bin
 
 env:
     - TOOLCHAIN=aarch64-unknown-linux-gnueabi
 
 script:
     # Build the toolchain
-    - ct-ng git@github.com:smallzzy/metwo-dev.git
     - ct-ng $TOOLCHAIN    # Configure the build
     - ct-ng build.8
 
