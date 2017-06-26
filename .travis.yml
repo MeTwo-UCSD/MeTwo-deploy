@@ -1,6 +1,8 @@
-# Using container-based infrastructure
-dist: trusty
-sudo: false
+# forced to use Sudo Enabled infrastructure for building docker image
+sudo: required
+
+services:
+  - docker
 
 # 'bash' will define a generic environment without interfering environment
 # settings like "CC=gcc"
@@ -30,25 +32,25 @@ addons:
             - g++
 
 install:
-    # Building crosstool-NG core
-    - ./ct-ng-install.sh
+    # install crosstool-NG
+    - wget http://crosstool-ng.org/download/crosstool-ng/crosstool-ng-1.23.0.tar.xz
+    - mkdir crosstool-ng 
+    - tar -xf crosstool-ng-*.tar* -C crosstool-ng --strip-components=1 
+    - cd crosstool-ng
+    - ./configure --enable-local
+    - make
 
-    
-
-# Here is the list of all the standard samples tracked
-# by the continuous integration system
 env:
-    - CT_SAMPLE=aarch64-unknown-linux-gnueabi
+    - TOOLCHAIN=aarch64-unknown-linux-gnueabi
 
-
-# Building the standard samples
 script:
     # Build the toolchain
-
+    - ct-ng git@github.com:smallzzy/metwo-dev.git
+    - ct-ng $TOOLCHAIN    # Configure the build
+    - ct-ng build.8
 
     # put it into docker environment
     #- . ./.travis.sh      # Load the travis environment
-    - ct-ng $CT_SAMPLE    # Configure the build
     #- ct-ng_travis_build  # Build the sample
 
 # On failure displaying the last lines of the log file
