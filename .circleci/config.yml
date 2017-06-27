@@ -36,7 +36,8 @@ jobs:
             TOOLCHAIN: "aarch64-unknown-linux-gnueabi"
           command: |
             export PATH=$PATH:$HOME/ct_build/bin
+            . ./build.sh
             ct-ng $TOOLCHAIN
-            ct-ng build.8
+            ct-ng_override && ct-ng_build
       
       # build docker image
