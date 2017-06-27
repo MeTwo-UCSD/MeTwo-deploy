@@ -17,7 +17,6 @@ branches:
 # download time and bandwidth
 cache:
     directories:
-        - $TRAVIS_BUILD_DIR/ct_build
         - $HOME/src
 
 
@@ -40,7 +39,7 @@ before_script:
     - tar -xf crosstool-ng-*.tar* -C crosstool-ng --strip-components=1 
     - cd crosstool-ng
     - ./configure --prefix=$TRAVIS_BUILD_DIR/ct_build
-    - make && sudo make install
+    - make && make install
 
     - export PATH=$PATH:$TRAVIS_BUILD_DIR/ct_build/bin
 
@@ -52,7 +51,11 @@ script:
     - ct-ng $TOOLCHAIN    # Configure the build
     - ct-ng build.8
 
+    # pack the toolchain
+    - cd ~/x-tools
+    - 
     # put it into docker environment
+
     #- . ./.travis.sh      # Load the travis environment
     #- ct-ng_travis_build  # Build the sample
 

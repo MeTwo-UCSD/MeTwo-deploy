@@ -1,0 +1,42 @@
+version: 2
+
+jobs:
+  # build on virtual machine
+  build:
+    machine:  true
+    
+    # only build the master branch
+    branches:
+      only:
+        - master
+  
+    # build step
+    working_directory: ~/metwo_dev
+
+    steps:
+      - checkout
+      # install dependency
+      - run:
+          command: sudo apt-get install -y bison flex gperf libncurses5-dev texinfo help2man g++
+    
+      # build ct-ng core
+      - run: 
+          name: build ct-ng core                              
+          command: |
+            wget http://crosstool-ng.org/download/crosstool-ng/crosstool-ng-1.23.0.tar.xz
+            mkdir crosstool-ng 
+            tar -xf crosstool-ng-*.tar* -C crosstool-ng --strip-components=1 
+            cd crosstool-ng
+            ./configure --prefix=$HOME/ct_build
+            make && make install
+
+      # build toolchain
+      - run:
+          environment:
+            TOOLCHAIN: "aarch64-unknown-linux-gnueabi"
+          command: |
+            export PATH=$PATH:$HOME/ct_build/bin
+            ct-ng $TOOLCHAIN
+            ct-ng build.8
+      
+      # build docker image
