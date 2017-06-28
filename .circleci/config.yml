@@ -1,9 +1,9 @@
 version: 2
 
 jobs:
-  # build on virtual machine
   build:
-    machine:  true
+    docker:
+      - image: circleci/python:2.7
     
     # only build the master branch
     branches:
@@ -18,7 +18,8 @@ jobs:
 
       - run:
           name: install dependency
-          command: sudo apt-get install -y bison flex gperf libncurses5-dev texinfo help2man g++ python-dev
+          command: |
+            sudo apt-get install -y gawk gcc gperf bison flex texinfo help2man make libncurses5-dev python-dev
     
       - run: 
           name: build ct-ng core                              
@@ -41,6 +42,8 @@ jobs:
           command: |
             export PATH=$PATH:$HOME/ct_build/bin
             . ./build.sh
+            mkdir -p $HOME/src
+            mkdir toolchain_build && cd toolchain_build
             ct-ng $TOOLCHAIN
             ct-ng_override && ct-ng_build
       
