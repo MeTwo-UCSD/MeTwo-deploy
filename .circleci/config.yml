@@ -15,11 +15,11 @@ jobs:
 
     steps:
       - checkout
-      # install dependency
+
       - run:
-          command: sudo apt-get install -y bison flex gperf libncurses5-dev texinfo help2man g++
+          name: install dependency
+          command: sudo apt-get install -y bison flex gperf libncurses5-dev texinfo help2man g++ python-dev
     
-      # build ct-ng core
       - run: 
           name: build ct-ng core                              
           command: |
@@ -29,9 +29,13 @@ jobs:
             cd crosstool-ng
             ./configure --prefix=$HOME/ct_build
             make && make install
+      
+      - restore_cache:
+          keys:
+            - src-package-1.23.0
 
-      # build toolchain
       - run:
+          name: build toolchain
           environment:
             TOOLCHAIN: "aarch64-unknown-linux-gnueabi"
           command: |
@@ -39,5 +43,10 @@ jobs:
             . ./build.sh
             ct-ng $TOOLCHAIN
             ct-ng_override && ct-ng_build
+      
+      - save_cache:
+          key: src-package-1.23.0
+          paths: 
+            - $HOME/src
       
       # build docker image
