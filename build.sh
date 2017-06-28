@@ -38,8 +38,8 @@ ct-ng_build()
     local result=$?
 
     # Stop the runner task
-    kill $runner_pid
-    wait $runner_pid 2>/dev/null
+    # kill $runner_pid
+    # wait $runner_pid 2>/dev/null
 
     # Return the result
     return $result
