@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # modified from https://raw.githubusercontent.com/crosstool-ng/crosstool-ng/master/.travis.sh
 
 # Override the log behaviour
@@ -22,25 +24,18 @@ ct-ng_build()
     ct-ng build.8 &
     local build_pid=$!
 
-    # Start a runner task to print a "still running" line every 5 minutes
-    # to avoid timeout
-    {
-        while true
+    export build_pid
+    # print a "still running" line every 5 minutes to avoid timeout
+    (
+        while ps -p $build_pid > /dev/null
         do
             sleep 300
             printf "Crosstool-NG is still running ...\r"
         done
-    } &
-    local runner_pid=$!
+     ) &
 
-    # Wait for the build to finish and get the result
-    wait $build_pid 2>/dev/null
-    local result=$?
-
-    # Stop the runner task
-    # kill $runner_pid
-    # wait $runner_pid 2>/dev/null
+    wait $build_pid
 
     # Return the result
-    return $result
+    return $?
 }
