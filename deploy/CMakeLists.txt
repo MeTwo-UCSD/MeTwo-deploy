@@ -9,7 +9,7 @@ ExternalProject_Add(
     GIT_REPOSITORY https://github.com/intel-iot-devkit/mraa
     GIT_TAG v1.7.0
     CMAKE_ARGS -D CMAKE_C_COMPILER=${CMAKE_C_COMPILER} -D CMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
-    -D BUILDSWIGNODE=OFF
+    -D BUILDSWIGNODE=OFF -D BUILDARCH=arm
 )
 
 ExternalProject_Add(
@@ -23,5 +23,5 @@ ExternalProject_Add(
     opencv
     GIT_REPOSITORY https://github.com/opencv/opencv
     GIT_TAG 3.2.0
-    CMAKE_ARGS -D CMAKE_C_COMPILER=${CMAKE_C_COMPILER} -D CMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}  -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr/local
+    CMAKE_ARGS -D CMAKE_C_COMPILER=${CMAKE_C_COMPILER} -D CMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}  -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr/local -D CMAKE_TOOLCHAIN_FILE=./opencv-prefix/src/platforms/linux/arm-gnueabi.toolchain.cmake 
 )
