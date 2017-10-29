@@ -2,18 +2,16 @@ FROM debian:jessie-slim
 
 WORKDIR /root
 
-ENV TOOLCHAIN aarch64-unknown-linux-gnueabi
-ENV PATH $PATH:/root/$TOOLCHAIN/bin
+ENV PATH $PATH:/usr/local/bin
 
 RUN apt-get update && \ 
-    apt-get install -y bzip2 cmake git wget
+    apt-get install -y cmake git xz-utils wget 
 
-RUN wget https://github.com/smallzzy/metwo-cc/releases/download/v1.0.1/$TOOLCHAIN.tar.bz2 && \
-#COPY $TOOLCHAIN.tar.bz2 /root/
-
-RUN tar -xf $TOOLCHAIN.tar.*
+RUN wget https://releases.linaro.org/components/toolchain/binaries/latest/aarch64-linux-gnu/gcc-linaro-7.1.1-2017.08-x86_64_aarch64-linux-gnu.tar.xz && \
+    tar -xf *.tar.xz --strip 1 -C /usr/local/
     
 COPY deploy/* /root/deploy/
+RUN bash /root/deploy/build.sh
+RUN tar -cJf toolchain.tar.xz output
 
-RUN bash /root/deploy/deploy.sh -D CMAKE_C_COMPILER=$(command -v ${TOOLCHAIN}-gcc) -D CMAKE_CXX_COMPILER=$(command -v ${TOOLCHAIN}-g++)
-
+COPY deploy/* /root/deploy/
